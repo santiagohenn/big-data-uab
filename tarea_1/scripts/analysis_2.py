@@ -1,0 +1,42 @@
+import pandas as pd
+import os
+import matplotlib.pyplot as plt
+
+# Leer el dataset:
+current_path = os.path.dirname(__file__)
+parent_path = os.path.dirname(current_path)
+file_path = os.path.join(parent_path, 'datasets', 'antidepresivos_adolescentes.csv')
+df = pd.read_csv(file_path)
+
+# Agrupar por año
+result = df.groupby('any')['nombre de receptes'].sum()
+
+# Ordenar los resultados en orden descendente y truncar a los primeros 20 valores
+result = result.sort_values(ascending=False)
+
+# Graficar los resultados en un gráfico de líneas
+plt.style.use('seaborn-v0_8-whitegrid')
+fig, ax = plt.subplots(figsize=(6, 4))
+
+line = result.plot(
+    kind='line',
+    ax=ax,
+    color='#4B8BBE',
+    marker='o'
+)
+
+ax.set_xlabel('Año', fontsize=14, labelpad=10)
+ax.set_ylabel('Número de recetas', fontsize=14, labelpad=10)
+# ax.set_title('Suma de recetas por año', fontsize=16, pad=15)
+ax.tick_params(axis='x', rotation=45, labelsize=12)
+ax.tick_params(axis='y', labelsize=12)
+
+# Remove top and right spines for a cleaner look
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+plt.tight_layout()
+plt.savefig('recetas_por_anyo.png', bbox_inches='tight')
+plt.show()
+
+# Resultados en números
+print(result)
