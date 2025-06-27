@@ -1,5 +1,7 @@
 # Tarea 1
 
+Consignas: https://ideas.info.unlp.edu.ar/infraestructura-software-para-el-procesamiento-de-big-data/Evaluation/Task/View/File/5bc9e4ce-3210-11ef-b6e3-3292d73aa1e7
+
 ### Infraestructura software para el procesamiento de Big Data
 
 *Santiago Martín Henn* | *santiagohenn@unc.edu.ar*
@@ -93,6 +95,8 @@ Agregando los datos de Barcelona y utilizando el servicio de datos estadísticos
 | 75 + 76 + 79        | 5,877,672  | 774,480          | 13.17 %               |
 
 El objetivo de este análisis es investigar la posible relación entre la cantidad de recetas de preparados de hormona tiroidea por habitante y la ingesta de yodo en distintas regiones de Catalunya. La ingesta de yodo está directamente relacionada con la cantidad de yodo presente en la dieta, la cual depende en gran medida de la ubicación geográfica y la cercanía al mar [1,2]. Si bien las poblaciones son bastante dispares, resulta interesante encontrar que en la región de los Pirineos hay 3.54% más de recetas por habitante que en la región de Barcelona.
+
+### Actividad 3
 
 
 
