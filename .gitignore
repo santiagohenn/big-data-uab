@@ -1,3 +1,7 @@
+## Ignore pdf outputs
+
+*.pdf
+
 ## Ignore datasets
 
 tarea_1/datasets/*
