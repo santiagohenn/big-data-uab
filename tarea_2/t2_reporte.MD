@@ -4,13 +4,30 @@
 
 ### Objetivo
 
-
+Analizar, evaluar y discutir una prueba de concepto de contenedores como
+muestra de plataformas de virtualización y como encapsular aplicaciones y disponer de
+escalabilidad horizontal.
 
 ---
 
 ### Actividad 1
 
-#### aaaaaa
+#### Desplegar la maquina virtual
+
+```bash
+sudo -i
+hostnamectl set-hostname master
+```
+
+```bash
+systemd-cgls
+```
+
+install docker
+```bash
+sudo apt update
+sudo apt install docker.io docker-compose
+```
 
 
 ---
