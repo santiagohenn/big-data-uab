@@ -14,21 +14,14 @@ escalabilidad horizontal.
 
 #### Desplegar la maquina virtual
 
-```bash
-sudo -i
-hostnamectl set-hostname master
-```
 
-```bash
-systemd-cgls
-```
+docker build --tag=app .
+docker images
 
-install docker
-```bash
-sudo apt update
-sudo apt install docker.io docker-compose
-```
+REPOSITORY TAG IMAGE ID
+App latest 326387cea398
 
+docker run -d -p 8080:8080 app
 
 ---
 
