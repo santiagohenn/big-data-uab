@@ -31,11 +31,25 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-Antes que nada instalar git:
+Tenemos que editar los permisos de usuario:
 
 ```bash
-apt install git
+nano /etc/group
 ```
+
+Y agregamos adminp a docker:
+
+```yaml
+docker:...:adminp
+```
+
+Y rebooteamos:
+
+```bash
+reboot
+```
+
+
 
 ---
 
@@ -155,10 +169,18 @@ persistimos las reglas de iptables con iptables-persistent:
 apt install iptables-persistent
 ```
 
+creamos un directorio APP e instalamos la imagen que utilizaremos para la actividad:
 
-
-Verifico el ping desde el worker:
-
+```bash
+FROM ubuntu
+ENV TZ=Europe/Madrid
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt-get update
+RUN apt-get -y install apache2
+RUN echo "<html><body><h1>Executando en: node X</h1></body></html>" > /var/www/html/index.html
+EXPOSE 80
+CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
+```
 
 
 
