@@ -64,8 +64,8 @@ IPs
 Master
 10.10.0.48, 20.20.0.32
 
-Workers
-
+Worker
+20.20.0.31
 
 En el worker:
 
@@ -82,10 +82,10 @@ network:
     ethernets:
         eth0:
             addresses:
-                - 20.20.0.30/21
+                - 20.20.0.31/21
             routes:
                 - to: "0.0.0.0/0"
-                  via: 20.20.0.26
+                  via: 20.20.0.32
                   metric: 0
 ```
 Guardo y luego:
@@ -168,10 +168,16 @@ persistimos las reglas de iptables con iptables-persistent:
 ```bash
 apt install iptables-persistent
 ```
-
-creamos un directorio APP e instalamos la imagen que utilizaremos para la actividad:
-
+Guardar las configuraciones actuales
 ```bash
+sudo netfilter-persistent save
+```
+
+
+
+Creamos un directorio App y un Dockerfile para la imagen que utilizaremos para la actividad:
+
+```Dockerfile
 FROM ubuntu
 ENV TZ=Europe/Madrid
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -181,6 +187,100 @@ RUN echo "<html><body><h1>Executando en: node X</h1></body></html>" > /var/www/h
 EXPOSE 80
 CMD ["/usr/sbin/apachectl", "-D", "FOREGROUND"]
 ```
+
+Creamos la imagen:
+
+```bash
+docker build --tag=apache2 .
+```
+
+Corremos la imagen:
+
+```bash
+docker run -d -p 8080:80 apache2
+```
+
+(8080 porque el 80 esta reservado para root. Podemos usar el 80 con sudo pero no hace falta, por ello mapeamos los puertos).
+
+chequeamos el status con docker ps.
+
+Podemos chequear toda la info de un contenedor con docker inspect. Aca podemos consultar la IP y el gateway! Docker configura todo automaticamente asi no tengo que preocuparme. En nuestro caso la IP es 172.17.0.2 y la gateway 172.17.0.1. Si ponemos 172.17.0.2 en el navegador vemos el front del servicio.
+
+Desde el worker podemos acceder al servicio a través de la IP del worker y el puerto que hayamos designado para el mismo:
+
+
+Repetimos los pasos para el worker y desplegamos el servicio en el mismo:
+
+docker_running_in_worker
+
+Por último atenderemos las peticiones desde el Master, quien delegará las peticiones escalando el servicio horizontalmente utilizando Swarm. 
+
+Primero detenemos los servicios en master y worker (docker stop <imagen>). Instalamos openssh server en el worker:
+
+```bash
+apt install openssh-server
+```
+
+Modificamos /etc/ssh/sshd_config para habilitar conexiones (linea 57):
+
+```yaml
+...
+PasswordAuthentication yes
+...
+```
+
+no olvidar
+
+```bash
+systemctl restart ssh
+```
+
+Y controlamos con:
+
+```bash
+systemctl status ssh
+```
+
+Verificamos la conexión ssh:
+
+
+Para evitar el uso de passwords (algo molesto para el deployment que estamos buscando), utilizamos un par de llaves. Generamos las mismas con openssh:
+
+```bash
+ssh-keygen
+```
+
+copio la key al worker:
+
+
+```bash
+ssh-copy-id adminp@20.20.0.31
+```
+
+Creamos el swarm
+
+```bash
+docker swarm init --advertise-addr 20.20.0.31
+```
+docker nos va a dar un comando para ejecutar en el worker, que lo una al swarm.
+
+Nos conectamos por ssh al worker y ejecutamos el comando que nos da docker. 
+
+chequeamos los nodos en el master con
+
+docker node ls
+
+Es importante que todas las maquinas tengan la misma version de docker. Con:
+
+docker swarm join-token worker
+
+podemos refrescar el link para sumar mas workers mas adelante
+
+Para crear el servicio ejecutamos:
+
+docker service create --name swarming --replicas=2 -p 8080:80 apache2
+
+(deberiamos ver el proceso de despliegue mientras los servicios se estabilizan)
 
 
 
