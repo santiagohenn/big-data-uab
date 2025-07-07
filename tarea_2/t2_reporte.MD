@@ -260,7 +260,7 @@ ssh-copy-id adminp@20.20.0.31
 Creamos el swarm
 
 ```bash
-docker swarm init --advertise-addr 20.20.0.31
+docker swarm init --advertise-addr 20.20.0.32
 ```
 docker nos va a dar un comando para ejecutar en el worker, que lo una al swarm.
 
@@ -268,19 +268,50 @@ Nos conectamos por ssh al worker y ejecutamos el comando que nos da docker.
 
 chequeamos los nodos en el master con
 
+```bash
 docker node ls
+```
 
 Es importante que todas las maquinas tengan la misma version de docker. Con:
 
+```bash
 docker swarm join-token worker
+```
 
 podemos refrescar el link para sumar mas workers mas adelante
 
 Para crear el servicio ejecutamos:
 
+```bash
 docker service create --name swarming --replicas=2 -p 8080:80 apache2
+```
 
 (deberiamos ver el proceso de despliegue mientras los servicios se estabilizan)
+
+Verificamos los servicios:
+
+Verificamos que en la misma dirección el servicio puede ser atendido por master o worker:
+
+Por último, instalamos el paquete de utilidades de apache:
+
+```bash
+sudo apt install apache2-utils
+```
+
+Y probamos nuestro swarm exigiendo el servicio:
+
+```bash
+ab -c 100 -n 1000 http://<IP-master>/
+```
+
+Tomar metricas y escalar el cluster a 20 replicas:
+
+```bash
+docker service scale swarming=20
+```
+
+Tomar metricas nuevamente con apache utils.
+
 
 
 
