@@ -65,6 +65,17 @@ hadoop jar wc.jar WordCount input/alice.txt <directorio-de-salida>
 
 Aclaración: el directorio de salida no deberá ser sobreescribible, para mantener la coherencia del sistema de archivos y la ejecución.
 
+Contar palabras y lineas del archivo:
+```bash
+wc -c <file-name>
+wc -l <file-name>
+```
+
+leer y ordenar el output (sort):
+```bash
+hdfs dfs -cat output/* | sort -k2rn | more
+```
+
 
 
 ---
