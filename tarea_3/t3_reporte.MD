@@ -1,4 +1,4 @@
-## Tarea 2: Infraestructura software para el procesamiento de Big Data
+## Tarea 3: Infraestructura software para el procesamiento de Big Data
 
 *Santiago Martín Henn* | *santiagohenn@unc.edu.ar* | [GitHub](http://github.com/santiagohenn/big-data-uab/).
 
